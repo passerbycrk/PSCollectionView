@@ -350,8 +350,8 @@ indexToRectMap = _indexToRectMap;
     static NSInteger bottomIndex = 0;
     
     NSInteger numViews = [self.collectionViewDataSource numberOfViewsInCollectionView:self];
-    NSLog(@"numViews:%d",numViews);
-    NSLog(@"viewKeysToRemove.count:%d",self.viewKeysToRemove.count);
+//    NSLog(@"numViews:%d",numViews);
+//    NSLog(@"viewKeysToRemove.count:%d",self.viewKeysToRemove.count);    
     if (numViews == 0) return;
     
     // Find out what rows are visible
@@ -389,7 +389,7 @@ indexToRectMap = _indexToRectMap;
         topIndex = MAX(0, topIndex - (bufferViewFactor * self.numCols));
         bottomIndex = MIN(numViews, bottomIndex + (bufferViewFactor * self.numCols));
     }
-    //NSLog(@"topIndex: %d, bottomIndex: %d", topIndex, bottomIndex);
+    //    NSLog(@"topIndex: %d, bottomIndex: %d", topIndex, bottomIndex);
     
     // Add views
     for (NSInteger i = topIndex; i < bottomIndex; i++) {
@@ -414,7 +414,7 @@ indexToRectMap = _indexToRectMap;
             [self.visibleViews setObject:newView forKey:key];
         }
     }
-    NSLog(@"visibleViews.count:%d",self.visibleViews.count);
+//    NSLog(@"visibleViews.count:%d",self.visibleViews.count);
 }
 
 #pragma mark - Reusing Views
@@ -438,7 +438,7 @@ indexToRectMap = _indexToRectMap;
     view.frame = CGRectZero;
     [self.reuseableViews addObject:view];
     [view removeFromSuperview];
-    NSLog(@"reuseableViews.count:%d",self.reuseableViews.count);
+//    NSLog(@"reuseableViews.count:%d",self.reuseableViews.count);
 }
 
 #pragma mark - Gesture Recognizer
