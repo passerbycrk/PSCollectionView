@@ -350,8 +350,7 @@ indexToRectMap = _indexToRectMap;
     static NSInteger bottomIndex = 0;
     
     NSInteger numViews = [self.collectionViewDataSource numberOfViewsInCollectionView:self];
-//    NSLog(@"numViews:%d",numViews);
-//    NSLog(@"viewKeysToRemove.count:%d",self.viewKeysToRemove.count);
+//    NSLog(@"numViews:%d",numViews);    
     if (numViews == 0) return;
     
     // Find out what rows are visible
@@ -366,8 +365,10 @@ indexToRectMap = _indexToRectMap;
             [self.viewKeysToRemove addObject:key];
         }
     }];
-    
+//    NSLog(@"viewKeysToRemove.count:%d",self.viewKeysToRemove.count);
+//    NSLog(@"1 visibleViews.count:%d",self.visibleViews.count);
     [self.visibleViews removeObjectsForKeys:self.viewKeysToRemove];
+//    NSLog(@"2 visibleViews.count:%d",self.visibleViews.count);
     [self.viewKeysToRemove removeAllObjects];
     
     if ([self.visibleViews count] == 0) {
@@ -414,7 +415,6 @@ indexToRectMap = _indexToRectMap;
             [self.visibleViews setObject:newView forKey:key];
         }
     }
-//    NSLog(@"visibleViews.count:%d",self.visibleViews.count);
 }
 
 #pragma mark - Reusing Views

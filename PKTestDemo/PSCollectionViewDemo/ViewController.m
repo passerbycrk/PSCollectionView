@@ -203,6 +203,7 @@
             id res = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             if (res && [res isKindOfClass:[NSDictionary class]]) {
 //                self.items = [res objectForKey:@"gallery"];
+                NSLog(@"dataSourceDidLoad");
                 NSArray *picsItems = [res objectForKey:@"pics"];
                 self.haveMore = [[res objectForKey:@"more"]  boolValue];
 

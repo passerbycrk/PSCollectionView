@@ -10,5 +10,4 @@
 
 @interface CellView : PSCollectionViewCell
 @property (retain, nonatomic) IBOutlet UIImageView *picView;
-
 @end

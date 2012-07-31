@@ -15,15 +15,18 @@
 - (void)prepareForReuse
 {
     [super prepareForReuse];
-//    self.alpha = 0.0f;
+    [[SDImageCache sharedImageCache] removeImageForKey:[self.object objectForKey:@"url"] fromDisk:NO];
 }
 - (void)fillViewWithObject:(id)object
 {
     [super fillViewWithObject:object];
-    NSURL *URL = [NSURL URLWithString:[object objectForKey:@"url"]];
-//    NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"http://imgur.com/%@%@", [item objectForKey:@"hash"], [item objectForKey:@"ext"]]];
-    
-    [self.picView  setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"placeholder"]];
+    if (self.object) {
+        NSURL *URL = [NSURL URLWithString:[object objectForKey:@"url"]];
+//        NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"http://imgur.com/%@%@", [item objectForKey:@"hash"], [item objectForKey:@"ext"]]];
+        
+        [self.picView  setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"placeholder"]];
+        
+    }
 }
 - (id)initWithFrame:(CGRect)frame
 {
