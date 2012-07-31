@@ -32,7 +32,7 @@
 		2F6B98F815C69A1D00014CBD /* PSCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6B98F615C69A1D00014CBD /* PSCollectionViewCell.m */; };
 		2FD42E9915C23FF0001A5914 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 2FD42E9515C23FF0001A5914 /* arrow.png */; };
 		2FD42E9A15C23FF0001A5914 /* arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2FD42E9615C23FF0001A5914 /* arrow@2x.png */; };
-		2FD42E9B15C23FF0001A5914 /* SVPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD42E9815C23FF0001A5914 /* SVPullToRefresh.m */; };
+		2FD42E9B15C23FF0001A5914 /* SVPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD42E9815C23FF0001A5914 /* SVPullToRefresh.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
