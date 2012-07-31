@@ -25,6 +25,7 @@
 @synthesize items;
 @synthesize haveMore;
 @synthesize refresh;
+@synthesize isLoading;
 @synthesize pageIndex;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -45,6 +46,7 @@
     [super viewDidLoad];
     self.haveMore = YES;
     self.refresh = YES;
+    self.isLoading = NO;
     self.pageIndex = 0;
     collectionView = [[PSCollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     
@@ -76,7 +78,13 @@
         [self refreshTable];
     }];
     
-    // Add infinite scrolling view    
+    // Add infinite scrolling view
+    SVPullToRefresh *footerView =[[SVPullToRefresh alloc] initWithScrollView:collectionView];
+    footerView.frame = CGRectMake(0.0f, 0.0f, collectionView.bounds.size.width, 30.0f);
+    footerView.backgroundColor = [UIColor clearColor];
+    collectionView.footerView = footerView;////collectionView.infiniteScrollingView;
+    collectionView.infiniteScrollingView = footerView;
+    [footerView release];
     [collectionView addInfiniteScrollingWithActionHandler:^{
         [self loadMoreDataToTable];
     }];
@@ -157,9 +165,10 @@
      
      */
     self.refresh = YES;
+    self.isLoading = NO;
     
     self.pageIndex = 0;
-    
+
     [self loadDataSource];
     
 }
@@ -176,7 +185,11 @@
 
 - (void)loadDataSource {
     // Request
-
+    if ( self.isLoading ) {
+        return;
+    }
+    
+    self.isLoading = YES;
     NSString *URLPath = [NSString stringWithFormat:@"http://morelife.sinaapp.com/v/1/snaps/%d/list",self.pageIndex++];
 //    NSString *URLPath = [NSString stringWithFormat:@"http://imgur.com/gallery.json"];
     NSURL *URL = [NSURL URLWithString:URLPath];
@@ -240,7 +253,7 @@
         [alertView show];
         [alertView autorelease];
     }
-
+    self.isLoading = NO;
 }
 
 - (void)dataSourceDidError:(NSError *)error {
@@ -259,5 +272,6 @@
                                               otherButtonTitles: nil];
     [alertView show];
     [alertView autorelease];
+    self.isLoading = NO;
 }
 @end

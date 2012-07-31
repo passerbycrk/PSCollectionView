@@ -14,6 +14,7 @@
 @property(nonatomic,retain) NSMutableArray *items;
 @property(nonatomic,assign) BOOL haveMore;
 @property(nonatomic,assign) BOOL refresh;
+@property(nonatomic,assign) BOOL isLoading;
 @property(nonatomic,assign) NSUInteger pageIndex;
 -(void)loadDataSource;
 @end

@@ -39,7 +39,7 @@
         {            
             self.alpha = 1.0f;
             self.image = image;
-            NSLog(@"imagesize:(%.1f,%.1f)",self.image.size.width,self.image.size.height);
+//            NSLog(@"imagesize:(%.1f,%.1f)",self.image.size.width,self.image.size.height);
         }
         else 
         {

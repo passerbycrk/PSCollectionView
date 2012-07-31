@@ -23,6 +23,8 @@
 @property (nonatomic, strong) NSDate *lastUpdatedDate;
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
 
+- (id)initWithScrollView:(UIScrollView *)scrollView;
+
 - (void)triggerRefresh;
 - (void)startAnimating;
 - (void)stopAnimating;
