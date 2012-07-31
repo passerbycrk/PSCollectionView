@@ -192,12 +192,16 @@ static CGFloat const SVPullToRefreshViewHeight = 60;
 
     self.showsInfiniteScrolling = YES;    
 
-    if (CGRectEqualToRect(self.frame, CGRectZero)) {
-        self.frame = CGRectMake(0, self.scrollView.contentSize.height, self.scrollView.bounds.size.width, SVPullToRefreshViewHeight);
+    if ([self.scrollView isKindOfClass:[UITableView class]]) {
+        self.originalTableFooterView = [(UITableView*)self.scrollView tableFooterView];
+        self.frame = CGRectMake(0, 0, self.scrollView.bounds.size.width, SVPullToRefreshViewHeight);
+        [(UITableView*)self.scrollView setTableFooterView:self];
+    }
+    else
+    {        
+        [_scrollView addSubview:self];
     }
     
-    [_scrollView addSubview:self];
-
     [self setNeedsLayout];
 }
 
@@ -254,9 +258,18 @@ static CGFloat const SVPullToRefreshViewHeight = 60;
 //    else
 //        [(UITableView*)self.scrollView setTableFooterView:self];
 //}
+
 - (void)setShowsInfiniteScrolling:(BOOL)show {
     showsInfiniteScrolling = show;
-    self.hidden = !show;
+    if ([_scrollView isKindOfClass:[UITableView class]]) {
+        if(!show)
+            [(UITableView*)self.scrollView setTableFooterView:self.originalTableFooterView];
+        else
+            [(UITableView*)self.scrollView setTableFooterView:self];
+        
+    }else{
+        self.hidden = !show;
+    }
 }
 
 #pragma mark -
@@ -388,12 +401,6 @@ static CGFloat const SVPullToRefreshViewHeight = 60;
             case SVPullToRefreshStateHidden:
             {
                 self.hidden = YES;
-//                UIEdgeInsets edgeInsets = _scrollView.contentInset;
-//                edgeInsets.bottom -= SVPullToRefreshViewHeight;
-//                if (edgeInsets.bottom < 0) {
-//                    edgeInsets.bottom = 0;
-//                }
-//                [_scrollView setContentInset:edgeInsets];
                 [self.activityIndicatorView stopAnimating];
             }
                 break;
@@ -401,10 +408,6 @@ static CGFloat const SVPullToRefreshViewHeight = 60;
             case SVPullToRefreshStateLoading:
             {
                 self.hidden = NO;
-//                self.frame = CGRectMake(0, self.scrollView.contentSize.height, self.scrollView.bounds.size.width, SVPullToRefreshViewHeight);
-//                UIEdgeInsets edgeInsets = _scrollView.contentInset;
-//                edgeInsets.bottom += SVPullToRefreshViewHeight;
-//                [_scrollView setContentInset:edgeInsets];
                 [self.activityIndicatorView startAnimating];
                 
                 infiniteScrollingActionHandler();
