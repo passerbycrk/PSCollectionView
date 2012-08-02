@@ -7,18 +7,19 @@
 //
 
 #import "AppDelegate.h"
-
 #import "ViewController.h"
+#import "PKMemMonitorWnd.h"
 
 @implementation AppDelegate
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
-
+@synthesize memMonitorWindow = _memMonitorWindow;
 - (void)dealloc
 {
     [_window release];
     [_viewController release];
+    self.memMonitorWindow = nil;
     [super dealloc];
 }
 
@@ -29,6 +30,13 @@
     self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController" bundle:nil] autorelease];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    
+    _memMonitorWindow = [[PKMemMonitorWnd alloc] initWithFrame:CGRectMake(0,
+                                                                          480 - 20,
+                                                                          320,
+                                                                          20)];
+                                                                                          
+    [_memMonitorWindow startMonitor];
     return YES;
 }
 

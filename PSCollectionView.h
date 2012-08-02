@@ -57,6 +57,9 @@
  */
 - (UIView *)dequeueReusableView;
 
+
+- (void)enqueueReusableView:(PSCollectionViewCell *)view;
+
 @end
 
 #pragma mark - Delegate

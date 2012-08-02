@@ -130,7 +130,7 @@ static inline NSInteger PSCollectionIndexForKey(NSString *key) {
  Stores a view for later reuse
  TODO: add an identifier like UITableView
  */
-- (void)enqueueReusableView:(PSCollectionViewCell *)view;
+//- (void)enqueueReusableView:(PSCollectionViewCell *)view;
 
 /**
  Magic!
@@ -182,6 +182,7 @@ indexToRectMap = _indexToRectMap;
         self.visibleViews = [NSMutableDictionary dictionary];
         self.viewKeysToRemove = [NSMutableArray array];
         self.indexToRectMap = [NSMutableDictionary dictionary];
+                
     }
     return self;
 }
@@ -189,20 +190,20 @@ indexToRectMap = _indexToRectMap;
 - (void)dealloc {
     // clear delegates
     self.delegate = nil;
-    self.collectionViewDataSource = nil;
-    self.collectionViewDelegate = nil;
-    
-    // release retains
-    self.headerView = nil;
-    self.footerView = nil;
-    self.emptyView = nil;
-    self.loadingView = nil;
-    
-    self.reuseableViews = nil;
-    self.visibleViews = nil;
-    self.viewKeysToRemove = nil;
-    self.indexToRectMap = nil;
-    [super dealloc];
+//    self.collectionViewDataSource = nil;
+//    self.collectionViewDelegate = nil;
+//    
+//    // release retains
+//    self.headerView = nil;
+//    self.footerView = nil;
+//    self.emptyView = nil;
+//    self.loadingView = nil;
+//    
+//    self.reuseableViews = nil;
+//    self.visibleViews = nil;
+//    self.viewKeysToRemove = nil;
+//    self.indexToRectMap = nil;
+//    [super dealloc];
 }
 
 #pragma mark - Setters
@@ -211,9 +212,9 @@ indexToRectMap = _indexToRectMap;
     if (_loadingView && [_loadingView respondsToSelector:@selector(removeFromSuperview)]) {
         [_loadingView removeFromSuperview];
     }
-    [_loadingView release], _loadingView = nil;
-    _loadingView = [loadingView retain];
-    
+//    [_loadingView release], _loadingView = nil;
+//    _loadingView = [loadingView retain];
+    _loadingView = loadingView;
     [self addSubview:_loadingView];
 }
 
@@ -348,18 +349,17 @@ indexToRectMap = _indexToRectMap;
     static NSInteger bufferViewFactor = 5;
     static NSInteger topIndex = 0;
     static NSInteger bottomIndex = 0;
-    
     NSInteger numViews = [self.collectionViewDataSource numberOfViewsInCollectionView:self];
 //    NSLog(@"numViews:%d",numViews);    
     if (numViews == 0) return;
     
     // Find out what rows are visible
     CGRect visibleRect = CGRectMake(self.contentOffset.x, self.contentOffset.y, self.width, self.height);
-    
     // Remove all rows that are not inside the visible rect
     [self.visibleViews enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         PSCollectionViewCell *view = (PSCollectionViewCell *)obj;
         CGRect viewRect = view.frame;
+        // 超出视野的，入队复用，并removeFromSuperview
         if (!CGRectIntersectsRect(visibleRect, viewRect)) {
             [self enqueueReusableView:view];
             [self.viewKeysToRemove addObject:key];
@@ -391,7 +391,6 @@ indexToRectMap = _indexToRectMap;
         bottomIndex = MIN(numViews, bottomIndex + (bufferViewFactor * self.numCols));
     }
     //NSLog(@"topIndex: %d, bottomIndex: %d", topIndex, bottomIndex);
-    
     // Add views
     for (NSInteger i = topIndex; i < bottomIndex; i++) {
         NSString *key = PSCollectionKeyForIndex(i);
@@ -406,7 +405,7 @@ indexToRectMap = _indexToRectMap;
             
             // Setup gesture recognizer
             if ([newView.gestureRecognizers count] == 0) {
-                PSCollectionViewTapGestureRecognizer *gr = [[[PSCollectionViewTapGestureRecognizer alloc] initWithTarget:self action:@selector(didSelectView:)] autorelease];
+                PSCollectionViewTapGestureRecognizer *gr = [[PSCollectionViewTapGestureRecognizer alloc] initWithTarget:self action:@selector(didSelectView:)];
                 gr.delegate = self;
                 [newView addGestureRecognizer:gr];
                 newView.userInteractionEnabled = YES;
@@ -423,9 +422,10 @@ indexToRectMap = _indexToRectMap;
     PSCollectionViewCell *view = [self.reuseableViews anyObject];
     if (view) {
         // Found a reusable view, remove it from the set
-        [view retain];
+//        [view retain];
         [self.reuseableViews removeObject:view];
-        [view autorelease];
+//        [view autorelease];
+//        NSLog(@"dequeue => reuseableViews.count:%d",self.reuseableViews.count);
     }
     
     return view;
@@ -438,7 +438,7 @@ indexToRectMap = _indexToRectMap;
     view.frame = CGRectZero;
     [self.reuseableViews addObject:view];
     [view removeFromSuperview];
-//    NSLog(@"reuseableViews.count:%d",self.reuseableViews.count);
+//    NSLog(@"enqueue => reuseableViews.count:%d",self.reuseableViews.count);
 }
 
 #pragma mark - Gesture Recognizer

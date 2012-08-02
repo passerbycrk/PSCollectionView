@@ -9,13 +9,16 @@
 #import "CellView.h"
 #import "UIImageView+WebCache.h"
 #import "SDImageCache.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation CellView
 @synthesize picView;
 - (void)prepareForReuse
 {
     [super prepareForReuse];
-    [[SDImageCache sharedImageCache] removeImageForKey:[self.object objectForKey:@"url"] fromDisk:NO];
+    if (self.object) {
+//        [[SDImageCache sharedImageCache] removeImageForKey:[self.object objectForKey:@"url"] fromDisk:NO];
+    }
 }
 - (void)fillViewWithObject:(id)object
 {
@@ -27,6 +30,8 @@
         [self.picView  setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"placeholder"]];
         
     }
+    self.layer.borderWidth = .5f;
+    self.layer.borderColor = [[UIColor blackColor] CGColor];
 }
 - (id)initWithFrame:(CGRect)frame
 {

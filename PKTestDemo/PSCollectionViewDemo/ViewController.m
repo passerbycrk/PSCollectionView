@@ -44,6 +44,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
     self.haveMore = YES;
     self.refresh = YES;
     self.isLoading = NO;
@@ -59,6 +60,13 @@
 
     collectionView.numColsPortrait = 3;
     collectionView.numColsLandscape = 3;
+    
+//    for (int index = 0; index < 5; index ++) {
+//        PSCollectionViewCell *cell = [[CellView alloc] init];
+//        cell.frame = CGRectZero;
+//        [collectionView enqueueReusableView:cell];
+//        [cell release];
+//    }
     
     // loading view
     UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -138,7 +146,7 @@
 
 - (CGFloat)heightForViewAtIndex:(NSInteger)index {
     NSDictionary *item = [self.items objectAtIndex:index];
-    return IMAGE_HEIGHT;
+    return [(NSNumber *)[item objectForKey:@"height"] floatValue];
     // You should probably subclass PSCollectionViewCell
     return [PSCollectionViewCell heightForViewWithObject:item inColumnWidth:self.collectionView.colWidth];
 }
@@ -228,7 +236,10 @@
         [self.items removeAllObjects];
         self.refresh = NO;
     }
-    // 清除个缓存。        
+//    if (self.items.count >= 200) {
+//        self.haveMore = NO;
+//    }
+    // 清除个缓存。
     if (self.pageIndex%3 == 0) {
         // 这个略卡 ， 每次读文件
 //        NSLog(@"COUNT[%d] memorySize:%d",self.items.count,[[SDImageCache sharedImageCache] getMemorySize]);            
@@ -241,8 +252,20 @@
             [[SDImageCache sharedImageCache] clearMemory];
         }
     }
-    
-    [self.items addObjectsFromArray:picsItems];
+    // 无聊的加个随机高度
+    NSMutableArray *array = [NSMutableArray arrayWithArray:picsItems];
+    for (int index = 0; index < array.count; index ++) {
+        NSMutableDictionary *dict= [NSMutableDictionary dictionaryWithDictionary:[array objectAtIndex:index]];
+        [dict setObject:[NSNumber numberWithFloat:(90+random()%100)] forKey:@"height"];
+        [array replaceObjectAtIndex:index withObject:dict];
+    }
+//    if (self.items.count > 30) {
+//        for (int index = self.items.count - 30; index < self.items.count -10; index ++) {
+//            NSDictionary *item = [self.items objectAtIndex:index];
+//            [[SDImageCache sharedImageCache] removeImageForKey:[item objectForKey:@"url"] fromDisk:NO];
+//        }
+//    }
+    [self.items addObjectsFromArray:array];
     [self.collectionView reloadData];
     if (!self.haveMore) {
         collectionView.showsInfiniteScrolling = NO;
