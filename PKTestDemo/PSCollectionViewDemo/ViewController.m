@@ -38,6 +38,7 @@
 }
 -(void)dealloc{
     [collectionView release];
+    [items removeAllObjects];
     [items release];
     [super dealloc];
 }
@@ -75,11 +76,15 @@
     collectionView.loadingView = activityIndicatorView;
     [activityIndicatorView release];
     
-    // empty view 
-    UIView *emptyView = [[UIView alloc] initWithFrame:self.view.bounds];
-    emptyView.backgroundColor = [UIColor yellowColor];
-    collectionView.emptyView = emptyView;
-    [emptyView release];
+    // empty view
+    UILabel *emptyLabel = [[UILabel alloc] initWithFrame:self.view.bounds];
+    emptyLabel.backgroundColor = [UIColor yellowColor];
+    emptyLabel.text = @"Empty!!!";
+    emptyLabel.font = [UIFont boldSystemFontOfSize:16.0f];
+    emptyLabel.textColor = [UIColor blackColor];
+    emptyLabel.textAlignment = UITextAlignmentCenter;
+    collectionView.emptyView = emptyLabel;
+    [emptyLabel release];
     
     // Add pull refresh view
     [collectionView addPullToRefreshWithActionHandler:^{
@@ -108,9 +113,9 @@
 }
 
 - (void)viewDidUnload
-{    
-    [self setCollectionView:nil];
+{
     [super viewDidUnload];
+    [self setCollectionView:nil];    
     // Release any retained subviews of the main view.
 }
 - (void)didReceiveMemoryWarning
@@ -219,7 +224,9 @@
                 
                 [self.collectionView.pullToRefreshView stopAnimating];
             } else {
-                [self dataSourceDidError:nil];
+                NSDictionary *dic = [NSDictionary dictionaryWithObject:res forKey:@"nani"];
+                NSError *error = [NSError errorWithDomain:@"heheDomain" code:111 userInfo:dic];
+                [self dataSourceDidError:error];
             }
         } else {
             [self dataSourceDidError:error];
@@ -247,10 +254,10 @@
 //            NSLog(@"clear Memory");
 //            [[SDImageCache sharedImageCache] clearMemory];
 //        }
-        if ([[SDImageCache sharedImageCache] getMemoryCount] >= MAX_IMAGE_CACHE_COUNT) {
-            NSLog(@"clear Memory");
-            [[SDImageCache sharedImageCache] clearMemory];
-        }
+//        if ([[SDImageCache sharedImageCache] getMemoryCount] >= MAX_IMAGE_CACHE_COUNT) {
+//            NSLog(@"clear Memory");
+//            [[SDImageCache sharedImageCache] clearMemory];
+//        }
     }
     // 无聊的加个随机高度
     NSMutableArray *array = [NSMutableArray arrayWithArray:picsItems];
@@ -284,13 +291,14 @@
     [self.collectionView reloadData];
     if (self.refresh) {
         self.refresh = NO;
-    }    
-    NSString *errMsg = @"= =";
-    if (error) {
-        errMsg = error.localizedDescription;
     }
+    else if (self.pageIndex > 0) {
+        self.pageIndex -= 1;
+    }
+    [self.collectionView.pullToRefreshView stopAnimating];
+    
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"error" 
-                                                        message:errMsg
+                                                        message:[NSString stringWithFormat:@"%@",error]
                                                        delegate:nil 
                                               cancelButtonTitle:@"OK" 
                                               otherButtonTitles: nil];

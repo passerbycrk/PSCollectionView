@@ -7,7 +7,6 @@
  */
 
 #import "UIImageView+WebCache.h"
-#import "SDImageCache.h"
 
 @implementation UIImageView (WebCache)
 
@@ -29,22 +28,10 @@
     [manager cancelForDelegate:self];
 
     self.image = placeholder;
-
+    self.alpha = 0.0f;
     if (url)
     {
-        self.alpha = 0.0f;
-        id key = [manager cacheKeyForURL:url];
-        UIImage *image = [[SDImageCache sharedImageCache] imageFromKey:key fromDisk:YES];
-        if (key && image) 
-        {            
-            self.alpha = 1.0f;
-            self.image = image;
-//            NSLog(@"imagesize:(%.1f,%.1f)",self.image.size.width,self.image.size.height);
-        }
-        else 
-        {
-            [manager downloadWithURL:url delegate:self options:options];
-        }
+        [manager downloadWithURL:url delegate:self options:options];
     }
 }
 
@@ -67,21 +54,10 @@
     [manager cancelForDelegate:self];
 
     self.image = placeholder;
-
+    self.alpha = 0.0f;
     if (url)
     {
-        self.alpha = 0.0f;
-        id key = [manager cacheKeyForURL:url];
-        UIImage *image = [[SDImageCache sharedImageCache] imageFromKey:key fromDisk:YES];
-        if (key && image) 
-        {            
-            self.alpha = 1.0f;
-            self.image = image;
-        }
-        else 
-        {
-            [manager downloadWithURL:url delegate:self options:options];
-        }
+        [manager downloadWithURL:url delegate:self options:options success:success failure:failure];
     }
 }
 #endif
@@ -94,15 +70,16 @@
 - (void)webImageManager:(SDWebImageManager *)imageManager didProgressWithPartialImage:(UIImage *)image forURL:(NSURL *)url
 {
     self.image = image;
+    [self setNeedsLayout];
 }
 
 - (void)webImageManager:(SDWebImageManager *)imageManager didFinishWithImage:(UIImage *)image
 {
-    
-    [UIView animateWithDuration:.5f animations:^{
-        self.image = image;
+    self.image = image;
+    [UIView animateWithDuration:0.5f animations:^{
         self.alpha = 1.0f;
     }];
+    [self setNeedsLayout];
 }
 
 @end

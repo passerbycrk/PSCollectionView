@@ -13,9 +13,29 @@
 
 @implementation CellView
 @synthesize picView;
+
++ (BOOL)automaticallyNotifiesObserversForKey: (NSString *)theKey
+{
+    BOOL automatic;
+    
+    if ([theKey isEqualToString:@"picView"]) {
+        automatic = NO;
+    } else {
+        automatic = [super automaticallyNotifiesObserversForKey:theKey];
+    }
+    
+    return automatic;
+}
+
+- (void)dealloc
+{
+    self.picView = nil;
+    [super dealloc];
+}
 - (void)prepareForReuse
 {
     [super prepareForReuse];
+    self.picView.image = nil;
     if (self.object) {
 //        [[SDImageCache sharedImageCache] removeImageForKey:[self.object objectForKey:@"url"] fromDisk:NO];
     }
@@ -24,11 +44,10 @@
 {
     [super fillViewWithObject:object];
     if (self.object) {
-        NSURL *URL = [NSURL URLWithString:[object objectForKey:@"url"]];
+        NSURL *URL = [NSURL URLWithString:[object objectForKey:@"url"]];        
 //        NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"http://imgur.com/%@%@", [item objectForKey:@"hash"], [item objectForKey:@"ext"]]];
-        
         [self.picView  setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"placeholder"]];
-        
+
     }
     self.layer.borderWidth = .5f;
     self.layer.borderColor = [[UIColor blackColor] CGColor];
@@ -44,17 +63,4 @@
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
-
-- (void)dealloc {
-    [picView release];
-    [super dealloc];
-}
 @end

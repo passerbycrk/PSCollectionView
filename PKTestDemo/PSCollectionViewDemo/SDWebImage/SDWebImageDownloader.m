@@ -116,7 +116,7 @@ NSString *const SDWebImageDownloadStopNotification = @"SDWebImageDownloadStopNot
 {
     if (![response respondsToSelector:@selector(statusCode)] || [((NSHTTPURLResponse *)response) statusCode] < 400)
     {
-        expectedSize = response.expectedContentLength > 0 ? response.expectedContentLength : 0;
+        expectedSize = response.expectedContentLength > 0 ? (NSUInteger)response.expectedContentLength : 0;
         self.imageData = SDWIReturnAutoreleased([[NSMutableData alloc] initWithCapacity:expectedSize]);
     }
     else
@@ -159,7 +159,7 @@ NSString *const SDWebImageDownloadStopNotification = @"SDWebImageDownloadStopNot
 
         // Update the data source, we must pass ALL the data, not just the new bytes
         CGImageSourceRef imageSource = CGImageSourceCreateIncremental(NULL);
-        CGImageSourceUpdateData(imageSource, (/*__bridge*/ CFDataRef)imageData, totalSize == expectedSize);
+        CGImageSourceUpdateData(imageSource, (__bridge  CFDataRef)imageData, totalSize == expectedSize);
 
         if (width + height == 0)
         {

@@ -39,6 +39,7 @@ typedef enum
  */
 @interface SDWebImageManager : NSObject <SDWebImageDownloaderDelegate, SDImageCacheDelegate>
 {
+    NSMutableArray *downloadInfo;
     NSMutableArray *downloadDelegates;
     NSMutableArray *downloaders;
     NSMutableArray *cacheDelegates;
@@ -73,11 +74,6 @@ typedef NSString *(^CacheKeyFilter)(NSURL *url);
  * @return SDWebImageManager shared instance
  */
 + (id)sharedManager;
-
-/**
- * 暴露个接口
- */
-- (NSString *)cacheKeyForURL:(NSURL *)url;
 
 - (UIImage *)imageWithURL:(NSURL *)url __attribute__ ((deprecated));
 

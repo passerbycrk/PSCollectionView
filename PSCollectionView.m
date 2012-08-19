@@ -224,6 +224,8 @@ indexToRectMap = _indexToRectMap;
     [self relayoutViews];
 }
 
+
+
 #pragma mark - View
 
 - (void)layoutSubviews {
@@ -234,7 +236,10 @@ indexToRectMap = _indexToRectMap;
         self.orientation = orientation;
         [self relayoutViews];
     } else {
-        [self removeAndAddCellsIfNecessary];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self removeAndAddCellsIfNecessary];
+        });
+
     }
 }
 

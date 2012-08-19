@@ -7,7 +7,7 @@
 //
 
 #import "PSCollectionViewCell.h"
-
+@class MKNetworkOperation;
 @interface CellView : PSCollectionViewCell
 @property (retain, nonatomic) IBOutlet UIImageView *picView;
 @end
