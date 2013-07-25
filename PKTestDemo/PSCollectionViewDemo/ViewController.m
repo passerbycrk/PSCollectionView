@@ -93,7 +93,7 @@
     
     // Add infinite scrolling view
     SVPullToRefresh *footerView =[[SVPullToRefresh alloc] initWithScrollView:collectionView];
-    footerView.frame = CGRectMake(0.0f, 0.0f, collectionView.bounds.size.width, 30.0f);
+    footerView.frame = CGRectMake(0.0f, 0.0f, collectionView.bounds.size.width, 40.0f);
     footerView.backgroundColor = [UIColor clearColor];
     collectionView.footerView = footerView;////collectionView.infiniteScrollingView;
     collectionView.infiniteScrollingView = footerView;
@@ -247,7 +247,7 @@
 //        self.haveMore = NO;
 //    }
     // 清除个缓存。
-    if (self.pageIndex%3 == 0) {
+    if (self.pageIndex%8 == 0) {
         // 这个略卡 ， 每次读文件
 //        NSLog(@"COUNT[%d] memorySize:%d",self.items.count,[[SDImageCache sharedImageCache] getMemorySize]);            
 //        if ([[SDImageCache sharedImageCache] getMemorySize] > MAX_IMAGE_CACHE_SIZE) {
@@ -266,12 +266,6 @@
         [dict setObject:[NSNumber numberWithFloat:(90+random()%100)] forKey:@"height"];
         [array replaceObjectAtIndex:index withObject:dict];
     }
-//    if (self.items.count > 30) {
-//        for (int index = self.items.count - 30; index < self.items.count -10; index ++) {
-//            NSDictionary *item = [self.items objectAtIndex:index];
-//            [[SDImageCache sharedImageCache] removeImageForKey:[item objectForKey:@"url"] fromDisk:NO];
-//        }
-//    }
     [self.items addObjectsFromArray:array];
     [self.collectionView reloadData];
     if (!self.haveMore) {
